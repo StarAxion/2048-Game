@@ -69,28 +69,67 @@ MatrixModel.prototype.startNewGame = function () {
 }
 
 MatrixModel.prototype.moveRight = function () {
-    this.attributes.grid.forEach(arr => {
-        arr.forEach((number, i) => {
-            if (number === '') arr.unshift(arr.splice(i, 1));
+    this.attributes.grid.forEach(row => {
+        row.forEach((cell, i) => {
+            if (cell === '') row.unshift(row.splice(i, 1));
         });
     });
 }
 
 MatrixModel.prototype.moveLeft = function () {
-    this.attributes.grid.forEach(arr => {
-        arr.reverse().forEach((number, i) => {
-            if (number === '') arr.unshift(arr.splice(i, 1));
+    this.attributes.grid.forEach(row => {
+        row.reverse().forEach((cell, i) => {
+            if (cell === '') row.unshift(row.splice(i, 1));
         });
-        arr.reverse();
+        row.reverse();
     });
 }
 
 MatrixModel.prototype.moveUp = function () {
+    let arr = [], grid = this.attributes.grid;
 
+    grid.forEach(row => {
+        row.forEach((cell, i) => {
+            if (!arr[i]) arr.push([]);
+            arr[i].push(cell);
+        });
+    });
+
+    arr.forEach(subArr => {
+        subArr.reverse().forEach((element, i) => {
+            if (element === '') subArr.unshift(subArr.splice(i, 1));
+        });
+        subArr.reverse();
+    });
+
+    arr.forEach(subArr => {
+        subArr.forEach((element, i) => grid[i].push(element));
+    });
+
+    grid.forEach(row => row.splice(0, arr.length));
 }
 
 MatrixModel.prototype.moveDown = function () {
+    let arr = [], grid = this.attributes.grid;
 
+    grid.forEach(row => {
+        row.forEach((cell, i) => {
+            if (!arr[i]) arr.push([]);
+            arr[i].push(cell);
+        });
+    });
+
+    arr.forEach(subArr => {
+        subArr.forEach((element, i) => {
+            if (element === '') subArr.unshift(subArr.splice(i, 1));
+        });
+    });
+
+    arr.forEach(subArr => {
+        subArr.forEach((element, i) => grid[i].push(element));
+    });
+
+    grid.forEach(row => row.splice(0, arr.length));
 }
 
 MatrixModel.prototype.displayActions = function (key) {
