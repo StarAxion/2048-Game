@@ -78,7 +78,7 @@ MatrixModel.prototype.moveRight = function () {
             }
         });
 
-        this.addSameNumbers(grid[i], grid[i].length);
+        this.sumSameNumbers(grid[i], grid[i].length);
     }
 }
 
@@ -92,7 +92,7 @@ MatrixModel.prototype.moveLeft = function () {
             }
         });
 
-        this.addSameNumbers(grid[i], grid[i].length);
+        this.sumSameNumbers(grid[i], grid[i].length);
         grid[i].reverse();
     }
 }
@@ -118,7 +118,7 @@ MatrixModel.prototype.moveUp = function () {
     });
 
     for (i = 0; i < arr.length; i += 1) {
-        this.addSameNumbers(arr[i], arr[i].length);
+        this.sumSameNumbers(arr[i], arr[i].length);
         arr[i].reverse();
         arr[i].forEach(function (element, index) {
             grid[index].push(element);
@@ -151,7 +151,7 @@ MatrixModel.prototype.moveDown = function () {
     });
 
     for (i = 0; i < arr.length; i += 1) {
-        this.addSameNumbers(arr[i], arr[i].length);
+        this.sumSameNumbers(arr[i], arr[i].length);
         arr[i].forEach(function (element, index) {
             grid[index].push(element);
         });
@@ -162,7 +162,7 @@ MatrixModel.prototype.moveDown = function () {
     });
 }
 
-MatrixModel.prototype.addSameNumbers = function (subArr, subArrSize) {
+MatrixModel.prototype.sumSameNumbers = function (subArr, subArrSize) {
     var i;
     for (i = 0; i < subArrSize; i += 1) {
         if (subArr[i] !== '' && subArr[i + 1] !== '' && subArr[i] === subArr[i + 1]) {
