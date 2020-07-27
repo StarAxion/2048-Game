@@ -69,67 +69,108 @@ MatrixModel.prototype.startNewGame = function () {
 }
 
 MatrixModel.prototype.moveRight = function () {
-    this.attributes.grid.forEach(row => {
-        row.forEach((cell, i) => {
-            if (cell === '') row.unshift(row.splice(i, 1));
+    var grid = this.attributes.grid, i, gridSize = grid.length;
+
+    for (i = 0; i < gridSize; i += 1) {
+        grid[i].forEach(function (cell, index) {
+            if (cell === '') {
+                grid[i].unshift(grid[i].splice(index, 1));
+            }
         });
-    });
+
+        this.addSameNumbers(grid[i], grid[i].length);
+    }
 }
 
 MatrixModel.prototype.moveLeft = function () {
-    this.attributes.grid.forEach(row => {
-        row.reverse().forEach((cell, i) => {
-            if (cell === '') row.unshift(row.splice(i, 1));
+    var grid = this.attributes.grid, i, gridSize = grid.length;
+
+    for (i = 0; i < gridSize; i += 1) {
+        grid[i].reverse().forEach(function (cell, index) {
+            if (cell === '') {
+                grid[i].unshift(grid[i].splice(index, 1));
+            }
         });
-        row.reverse();
-    });
+
+        this.addSameNumbers(grid[i], grid[i].length);
+        grid[i].reverse();
+    }
 }
 
 MatrixModel.prototype.moveUp = function () {
-    let arr = [], grid = this.attributes.grid;
+    var arr = [], grid = this.attributes.grid, i;
 
-    grid.forEach(row => {
-        row.forEach((cell, i) => {
-            if (!arr[i]) arr.push([]);
-            arr[i].push(cell);
+    grid.forEach(function (row) {
+        row.forEach(function (cell, index) {
+            if (!arr[index]) {
+                arr.push([]);
+            }
+            arr[index].push(cell);
         });
     });
 
-    arr.forEach(subArr => {
-        subArr.reverse().forEach((element, i) => {
-            if (element === '') subArr.unshift(subArr.splice(i, 1));
+    arr.forEach(function (subArr) {
+        subArr.reverse().forEach(function (element, index) {
+            if (element === '') {
+                subArr.unshift(subArr.splice(index, 1));
+            }
         });
-        subArr.reverse();
     });
 
-    arr.forEach(subArr => {
-        subArr.forEach((element, i) => grid[i].push(element));
-    });
+    for (i = 0; i < arr.length; i += 1) {
+        this.addSameNumbers(arr[i], arr[i].length);
+        arr[i].reverse();
+        arr[i].forEach(function (element, index) {
+            grid[index].push(element);
+        });
+    }
 
-    grid.forEach(row => row.splice(0, arr.length));
+    grid.forEach(function (row) {
+        row.splice(0, arr.length);
+    });
 }
 
 MatrixModel.prototype.moveDown = function () {
-    let arr = [], grid = this.attributes.grid;
+    var arr = [], grid = this.attributes.grid, i;
 
-    grid.forEach(row => {
-        row.forEach((cell, i) => {
-            if (!arr[i]) arr.push([]);
-            arr[i].push(cell);
+    grid.forEach(function (row) {
+        row.forEach(function (cell, index) {
+            if (!arr[index]) {
+                arr.push([]);
+            }
+            arr[index].push(cell);
         });
     });
 
-    arr.forEach(subArr => {
-        subArr.forEach((element, i) => {
-            if (element === '') subArr.unshift(subArr.splice(i, 1));
+    arr.forEach(function (subArr) {
+        subArr.forEach(function (element, index) {
+            if (element === '') {
+                subArr.unshift(subArr.splice(index, 1));
+            }
         });
     });
 
-    arr.forEach(subArr => {
-        subArr.forEach((element, i) => grid[i].push(element));
-    });
+    for (i = 0; i < arr.length; i += 1) {
+        this.addSameNumbers(arr[i], arr[i].length);
+        arr[i].forEach(function (element, index) {
+            grid[index].push(element);
+        });
+    }
 
-    grid.forEach(row => row.splice(0, arr.length));
+    grid.forEach(function (row) {
+        row.splice(0, arr.length);
+    });
+}
+
+MatrixModel.prototype.addSameNumbers = function (subArr, subArrSize) {
+    var i;
+    for (i = 0; i < subArrSize; i += 1) {
+        if (subArr[i] !== '' && subArr[i + 1] !== '' && subArr[i] === subArr[i + 1]) {
+            subArr[i] += subArr[i + 1];
+            subArr.unshift('');
+            subArr.pop();
+        }
+    }
 }
 
 MatrixModel.prototype.displayActions = function (key) {
