@@ -74,7 +74,7 @@ MatrixModel.prototype.moveRight = function (grid, gridSize, i) {
     for (i = 0; i < gridSize; i += 1) {
         grid[i].forEach(function (cell, index) {
             if (cell === '') {
-                grid[i].unshift(grid[i].splice(index, 1));
+                grid[i].unshift(grid[i].splice(index, 1).shift());
             }
         });
 
@@ -86,7 +86,7 @@ MatrixModel.prototype.moveLeft = function (grid, gridSize, i) {
     for (i = 0; i < gridSize; i += 1) {
         grid[i].reverse().forEach(function (cell, index) {
             if (cell === '') {
-                grid[i].unshift(grid[i].splice(index, 1));
+                grid[i].unshift(grid[i].splice(index, 1).shift());
             }
         });
 
@@ -108,7 +108,7 @@ MatrixModel.prototype.moveUp = function (arr, grid, i) {
     arr.forEach(function (subArr) {
         subArr.reverse().forEach(function (element, index) {
             if (element === '') {
-                subArr.unshift(subArr.splice(index, 1));
+                subArr.unshift(subArr.splice(index, 1).shift());
             }
         });
     });
@@ -139,7 +139,7 @@ MatrixModel.prototype.moveDown = function (arr, grid, i) {
     arr.forEach(function (subArr) {
         subArr.forEach(function (element, index) {
             if (element === '') {
-                subArr.unshift(subArr.splice(index, 1));
+                subArr.unshift(subArr.splice(index, 1).shift());
             }
         });
     });
