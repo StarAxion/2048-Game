@@ -12,14 +12,11 @@ function MatrixModel() {
             height: 4
         }
     }
-
     var instance = this;
     MatrixModel = function () {
         return instance;
     }
-
     this.initialRender();
-
 }
 
 MatrixModel.prototype = Object.create(BaseModel.prototype);
@@ -65,12 +62,15 @@ MatrixModel.prototype.initialRender = function () {
 }
 
 MatrixModel.prototype.startNewGame = function () {
-    this.publish('changeData');
+    this.attributes.grid.forEach(function (row) {
+        row.forEach(function (cell, index) {
+            row.splice(index, 1, '');
+        });
+    });
+    this.initialRender();
 }
 
-MatrixModel.prototype.moveRight = function () {
-    var grid = this.attributes.grid, i, gridSize = grid.length;
-
+MatrixModel.prototype.moveRight = function (grid, gridSize, i) {
     for (i = 0; i < gridSize; i += 1) {
         grid[i].forEach(function (cell, index) {
             if (cell === '') {
@@ -82,9 +82,7 @@ MatrixModel.prototype.moveRight = function () {
     }
 }
 
-MatrixModel.prototype.moveLeft = function () {
-    var grid = this.attributes.grid, i, gridSize = grid.length;
-
+MatrixModel.prototype.moveLeft = function (grid, gridSize, i) {
     for (i = 0; i < gridSize; i += 1) {
         grid[i].reverse().forEach(function (cell, index) {
             if (cell === '') {
@@ -97,9 +95,7 @@ MatrixModel.prototype.moveLeft = function () {
     }
 }
 
-MatrixModel.prototype.moveUp = function () {
-    var arr = [], grid = this.attributes.grid, i;
-
+MatrixModel.prototype.moveUp = function (arr, grid, i) {
     grid.forEach(function (row) {
         row.forEach(function (cell, index) {
             if (!arr[index]) {
@@ -130,9 +126,7 @@ MatrixModel.prototype.moveUp = function () {
     });
 }
 
-MatrixModel.prototype.moveDown = function () {
-    var arr = [], grid = this.attributes.grid, i;
-
+MatrixModel.prototype.moveDown = function (arr, grid, i) {
     grid.forEach(function (row) {
         row.forEach(function (cell, index) {
             if (!arr[index]) {
@@ -167,25 +161,27 @@ MatrixModel.prototype.sumSameNumbers = function (subArr, subArrSize) {
     for (i = 0; i < subArrSize; i += 1) {
         if (subArr[i] !== '' && subArr[i + 1] !== '' && subArr[i] === subArr[i + 1]) {
             subArr[i] += subArr[i + 1];
+            subArr.splice(i + 1, 1);
             subArr.unshift('');
-            subArr.pop();
         }
     }
 }
 
 MatrixModel.prototype.displayActions = function (key) {
+    var arr = [], grid = this.attributes.grid, gridSize = grid.length, i;
+
     switch (key) {
         case 'right':
-            this.moveRight();
+            this.moveRight(grid, gridSize, i);
             break;
         case 'left':
-            this.moveLeft();
+            this.moveLeft(grid, gridSize, i);
             break;
         case 'up':
-            this.moveUp();
+            this.moveUp(arr, grid, i);
             break;
         case 'down':
-            this.moveDown();
+            this.moveDown(arr, grid, i);
             break;
     }
 
