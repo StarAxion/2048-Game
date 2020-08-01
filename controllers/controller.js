@@ -5,17 +5,17 @@ function Controller() {
 Controller.prototype.onKeyPress = function (event) {
     var key;
     switch (event.keyCode) {
+        case 39:
+            key = 'right';
+            break;
+        case 37:
+            key = 'left';
+            break;
         case 38:
             key = 'up';
             break;
         case 40:
             key = 'down';
-            break;
-        case 37:
-            key = 'left';
-            break;
-        case 39:
-            key = 'right';
             break;
         default:
             return false;
@@ -24,6 +24,8 @@ Controller.prototype.onKeyPress = function (event) {
     this.matrixModel.displayActions(key);
 }
 
-Controller.prototype.onClickNewGame = function () {
-    this.matrixModel.startNewGame();
+Controller.prototype.onClickNewGame = function (event) {
+    if (event.target.id === 'newGameBtn') {
+        this.matrixModel.startNewGame();
+    }
 }

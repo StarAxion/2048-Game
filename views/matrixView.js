@@ -30,6 +30,5 @@ MatrixView.prototype.render = function () {
 
 MatrixView.prototype.afterRender = function () {
     window.onkeydown = this.controller.onKeyPress.bind(this.controller);
-    var newGameButton = document.getElementById('newGameBtn');
-    newGameButton.addEventListener('click', this.controller.onClickNewGame.bind(this.controller));
+    window.onclick = this.controller.onClickNewGame.bind(this.controller);
 }
