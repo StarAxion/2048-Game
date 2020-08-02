@@ -1,9 +1,11 @@
 function Controller() {
     this.matrixModel = new MatrixModel();
+    this.summaryModel = new SummaryModel();
 }
 
 Controller.prototype.onKeyPress = function (event) {
     var key;
+
     switch (event.keyCode) {
         case 39:
             key = 'right';
@@ -21,11 +23,13 @@ Controller.prototype.onKeyPress = function (event) {
             return false;
     }
 
-    this.matrixModel.displayActions(key);
+    this.summaryModel.setTotalScore(this.matrixModel.displayActions(key));
+    this.summaryModel.setBestScore();
 }
 
 Controller.prototype.onClickNewGame = function (event) {
     if (event.target.id === 'newGameBtn') {
         this.matrixModel.startNewGame();
+        this.summaryModel.startNewGame();
     }
 }

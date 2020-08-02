@@ -1,5 +1,6 @@
 function MatrixModel() {
     BaseModel.call(this);
+
     this.attributes = {
         grid: [
             ['', '', '', ''],
@@ -11,11 +12,13 @@ function MatrixModel() {
             width: 4,
             height: 4
         }
-    }
+    };
+
     var instance = this;
     MatrixModel = function () {
         return instance;
     }
+
     this.initialRender();
 }
 
@@ -32,6 +35,7 @@ MatrixModel.prototype.getRandomCell = function () {
 
 MatrixModel.prototype.getRandomRow = function () {
     var randomRow = Math.floor(Math.random() * 4);
+
     if (this.attributes.grid[randomRow].includes('')) {
         return randomRow;
     } else {
@@ -41,6 +45,7 @@ MatrixModel.prototype.getRandomRow = function () {
 
 MatrixModel.prototype.getRandomCellExist = function (row) {
     var i, newArr = [], randomRow = this.attributes.grid[row], size = randomRow.length;
+
     for (i = 0; i < size; i += 1) {
         if (randomRow[i] === '') {
             newArr.push(i);
@@ -67,10 +72,11 @@ MatrixModel.prototype.startNewGame = function () {
             row.splice(index, 1, '');
         });
     });
+
     this.initialRender();
 }
 
-MatrixModel.prototype.moveRight = function (grid, gridSize, i) {
+MatrixModel.prototype.moveRight = function (grid, gridSize, i, score) {
     for (i = 0; i < gridSize; i += 1) {
         grid[i].forEach(function (cell, index) {
             if (cell === '') {
@@ -78,11 +84,13 @@ MatrixModel.prototype.moveRight = function (grid, gridSize, i) {
             }
         });
 
-        this.sumSameNumbers(grid[i], grid[i].length);
+        score += this.sumSameNumbers(grid[i], grid[i].length);
     }
+
+    return score;
 }
 
-MatrixModel.prototype.moveLeft = function (grid, gridSize, i) {
+MatrixModel.prototype.moveLeft = function (grid, gridSize, i, score) {
     for (i = 0; i < gridSize; i += 1) {
         grid[i].reverse().forEach(function (cell, index) {
             if (cell === '') {
@@ -90,12 +98,14 @@ MatrixModel.prototype.moveLeft = function (grid, gridSize, i) {
             }
         });
 
-        this.sumSameNumbers(grid[i], grid[i].length);
+        score += this.sumSameNumbers(grid[i], grid[i].length);
         grid[i].reverse();
     }
+
+    return score;
 }
 
-MatrixModel.prototype.moveUp = function (arr, grid, i) {
+MatrixModel.prototype.moveUp = function (arr, grid, i, score) {
     grid.forEach(function (row) {
         row.forEach(function (cell, index) {
             if (!arr[index]) {
@@ -114,7 +124,7 @@ MatrixModel.prototype.moveUp = function (arr, grid, i) {
     });
 
     for (i = 0; i < arr.length; i += 1) {
-        this.sumSameNumbers(arr[i], arr[i].length);
+        score += this.sumSameNumbers(arr[i], arr[i].length);
         arr[i].reverse();
         arr[i].forEach(function (element, index) {
             grid[index].push(element);
@@ -124,9 +134,11 @@ MatrixModel.prototype.moveUp = function (arr, grid, i) {
     grid.forEach(function (row) {
         row.splice(0, arr.length);
     });
+
+    return score;
 }
 
-MatrixModel.prototype.moveDown = function (arr, grid, i) {
+MatrixModel.prototype.moveDown = function (arr, grid, i, score) {
     grid.forEach(function (row) {
         row.forEach(function (cell, index) {
             if (!arr[index]) {
@@ -145,7 +157,7 @@ MatrixModel.prototype.moveDown = function (arr, grid, i) {
     });
 
     for (i = 0; i < arr.length; i += 1) {
-        this.sumSameNumbers(arr[i], arr[i].length);
+        score += this.sumSameNumbers(arr[i], arr[i].length);
         arr[i].forEach(function (element, index) {
             grid[index].push(element);
         });
@@ -154,36 +166,43 @@ MatrixModel.prototype.moveDown = function (arr, grid, i) {
     grid.forEach(function (row) {
         row.splice(0, arr.length);
     });
+
+    return score;
 }
 
 MatrixModel.prototype.sumSameNumbers = function (subArr, subArrSize) {
-    var i;
+    var i, sum = 0;
+
     for (i = 0; i < subArrSize; i += 1) {
         if (subArr[i] !== '' && subArr[i + 1] !== '' && subArr[i] === subArr[i + 1]) {
             subArr[i] += subArr[i + 1];
+            sum += parseInt(subArr[i]);
             subArr.splice(i + 1, 1);
             subArr.unshift('');
         }
     }
+
+    return sum;
 }
 
 MatrixModel.prototype.displayActions = function (key) {
-    var arr = [], grid = this.attributes.grid, gridSize = grid.length, i;
+    var arr = [], grid = this.attributes.grid, gridSize = grid.length, i, score = 0;
 
     switch (key) {
         case 'right':
-            this.moveRight(grid, gridSize, i);
+            score += this.moveRight(grid, gridSize, i, score);
             break;
         case 'left':
-            this.moveLeft(grid, gridSize, i);
+            score += this.moveLeft(grid, gridSize, i, score);
             break;
         case 'up':
-            this.moveUp(arr, grid, i);
+            score += this.moveUp(arr, grid, i, score);
             break;
         case 'down':
-            this.moveDown(arr, grid, i);
+            score += this.moveDown(arr, grid, i, score);
             break;
     }
 
     this.publish('changeData');
+    return score;
 }
