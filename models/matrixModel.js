@@ -2,7 +2,7 @@ function MatrixModel() {
     BaseModel.call(this);
 
     this.attributes = {
-        grid: [
+        grid: JSON.parse(localStorage.getItem('grid')) || [
             ['', '', '', ''],
             ['', '', '', ''],
             ['', '', '', ''],
@@ -19,7 +19,9 @@ function MatrixModel() {
         return instance;
     }
 
-    this.initialRender();
+    if (!JSON.parse(localStorage.getItem('grid'))) {
+        this.initialRender();
+    }
 }
 
 MatrixModel.prototype = Object.create(BaseModel.prototype);
@@ -75,6 +77,7 @@ MatrixModel.prototype.getRandomCellWithoutDuplicates = function () {
 MatrixModel.prototype.initialRender = function () {
     this.attributes.grid[this.getRandomRow()][this.getRandomCell()] = this.getRandomValue();
     this.getRandomCellWithoutDuplicates();
+
     this.publish('changeData');
 }
 
@@ -85,6 +88,7 @@ MatrixModel.prototype.startNewGame = function () {
         });
     });
 
+    localStorage.removeItem('grid');
     this.initialRender();
 }
 
@@ -216,17 +220,21 @@ MatrixModel.prototype.displayActions = function (key) {
     }
 
     this.getRandomCellWithoutDuplicates();
+    localStorage.setItem('grid', JSON.stringify(grid));
     this.publish('changeData');
 
     return score;
 }
 
 MatrixModel.prototype.showWin = function () {
-    this.attributes.grid.forEach(function (row) {
+    var grid = this.attributes.grid;
+
+    grid.forEach(function (row) {
         row.forEach(function (cell, index) {
             row.splice(index, 1, 'win');
         });
     });
 
+    localStorage.setItem('grid', JSON.stringify(grid));
     this.publish('changeData');
 }
