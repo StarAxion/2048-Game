@@ -34,6 +34,18 @@ MatrixModel.prototype.getRandomCell = function () {
 }
 
 MatrixModel.prototype.getRandomRow = function () {
+    var freeRows = 0;
+
+    this.attributes.grid.forEach(function (row) {
+        if (row.includes('')) {
+            freeRows += 1;
+        }
+    });
+
+    if (freeRows === 0) {
+        return 0;
+    }
+
     var randomRow = Math.floor(Math.random() * 4);
 
     if (this.attributes.grid[randomRow].includes('')) {
@@ -61,7 +73,7 @@ MatrixModel.prototype.getRandomCellWithoutDuplicates = function () {
 }
 
 MatrixModel.prototype.initialRender = function () {
-    this.attributes.grid[this.getRandomCell()][this.getRandomCell()] = this.getRandomValue();
+    this.attributes.grid[this.getRandomRow()][this.getRandomCell()] = this.getRandomValue();
     this.getRandomCellWithoutDuplicates();
     this.publish('changeData');
 }
@@ -203,6 +215,18 @@ MatrixModel.prototype.displayActions = function (key) {
             break;
     }
 
+    this.getRandomCellWithoutDuplicates();
     this.publish('changeData');
+
     return score;
+}
+
+MatrixModel.prototype.showWin = function () {
+    this.attributes.grid.forEach(function (row) {
+        row.forEach(function (cell, index) {
+            row.splice(index, 1, 'win');
+        });
+    });
+
+    this.publish('changeData');
 }

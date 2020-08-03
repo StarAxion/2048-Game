@@ -4,7 +4,7 @@ function Controller() {
 }
 
 Controller.prototype.onKeyPress = function (event) {
-    var key;
+    var key, scoreResult = Number(document.getElementById('scoreResult').innerText);
 
     switch (event.keyCode) {
         case 39:
@@ -23,8 +23,13 @@ Controller.prototype.onKeyPress = function (event) {
             return false;
     }
 
-    this.summaryModel.setTotalScore(this.matrixModel.displayActions(key));
-    this.summaryModel.setBestScore();
+    if (scoreResult >= 2048) {
+        alert("Winner, winner, chicken dinner!");
+        this.matrixModel.showWin();
+    } else {
+        this.summaryModel.setTotalScore(this.matrixModel.displayActions(key));
+        this.summaryModel.setBestScore();
+    }
 }
 
 Controller.prototype.onClickNewGame = function (event) {
