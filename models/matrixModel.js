@@ -92,134 +92,220 @@ MatrixModel.prototype.startNewGame = function () {
     this.initialRender();
 }
 
-MatrixModel.prototype.moveRight = function (grid, gridSize, i, score) {
-    for (i = 0; i < gridSize; i += 1) {
-        grid[i].forEach(function (cell, index) {
-            if (cell === '') {
-                grid[i].unshift(grid[i].splice(index, 1).shift());
-            }
-        });
+MatrixModel.prototype.moveRight = function (grid, gridSize, arr, shifts, emptyCells, score, direction) {
+    var i, j;
 
-        score += this.sumSameNumbers(grid[i], grid[i].length);
+    for (i = 0; i < gridSize; i += 1) {
+        for (j = 0; j < grid[i].length; j += 1) {
+            if (grid[i][j] !== '' && grid[i][j + 1] === '') {
+                shifts += 1;
+            }
+            if (grid[i][j] === '') {
+                grid[i].unshift(grid[i].splice(j, 1).shift());
+            }
+        }
+        score += this.sumSameNumbers(grid[i], grid[i].length, direction);
     }
+
+    this.addNewElementToGrid(shifts, score);
+    this.checkForEmptyCells(grid, arr, emptyCells);
 
     return score;
 }
 
-MatrixModel.prototype.moveLeft = function (grid, gridSize, i, score) {
-    for (i = 0; i < gridSize; i += 1) {
-        grid[i].reverse().forEach(function (cell, index) {
-            if (cell === '') {
-                grid[i].unshift(grid[i].splice(index, 1).shift());
-            }
-        });
+MatrixModel.prototype.moveLeft = function (grid, gridSize, arr, shifts, emptyCells, score, direction) {
+    var i, j;
 
-        score += this.sumSameNumbers(grid[i], grid[i].length);
+    for (i = 0; i < gridSize; i += 1) {
         grid[i].reverse();
+        for (j = 0; j < grid[i].length; j += 1) {
+            if (grid[i][j] !== '' && grid[i][j + 1] === '') {
+                shifts += 1;
+            }
+            if (grid[i][j] === '') {
+                grid[i].unshift(grid[i].splice(j, 1).shift());
+            }
+        }
+        grid[i].reverse();
+        score += this.sumSameNumbers(grid[i], grid[i].length, direction);
     }
+
+    this.addNewElementToGrid(shifts, score);
+    this.checkForEmptyCells(grid, arr, emptyCells);
 
     return score;
 }
 
-MatrixModel.prototype.moveUp = function (arr, grid, i, score) {
-    grid.forEach(function (row) {
-        row.forEach(function (cell, index) {
-            if (!arr[index]) {
-                arr.push([]);
-            }
-            arr[index].push(cell);
-        });
-    });
+MatrixModel.prototype.moveUp = function (grid, arr, shifts, emptyCells, score, direction) {
+    var i, j;
 
-    arr.forEach(function (subArr) {
-        subArr.reverse().forEach(function (element, index) {
-            if (element === '') {
-                subArr.unshift(subArr.splice(index, 1).shift());
-            }
-        });
-    });
+    this.groupCellsByIndex(grid, arr);
 
     for (i = 0; i < arr.length; i += 1) {
-        score += this.sumSameNumbers(arr[i], arr[i].length);
         arr[i].reverse();
-        arr[i].forEach(function (element, index) {
-            grid[index].push(element);
-        });
-    }
-
-    grid.forEach(function (row) {
-        row.splice(0, arr.length);
-    });
-
-    return score;
-}
-
-MatrixModel.prototype.moveDown = function (arr, grid, i, score) {
-    grid.forEach(function (row) {
-        row.forEach(function (cell, index) {
-            if (!arr[index]) {
-                arr.push([]);
+        for (j = 0; j < arr[i].length; j += 1) {
+            if (arr[i][j] !== '' && arr[i][j + 1] === '') {
+                shifts += 1;
             }
-            arr[index].push(cell);
-        });
-    });
+            if (arr[i][j] === '') {
+                arr[i].unshift(arr[i].splice(j, 1).shift());
+            }
+        }
+        arr[i].reverse();
+        score += this.sumSameNumbers(arr[i], arr[i].length, direction);
+    }
 
     arr.forEach(function (subArr) {
         subArr.forEach(function (element, index) {
-            if (element === '') {
-                subArr.unshift(subArr.splice(index, 1).shift());
-            }
-        });
-    });
-
-    for (i = 0; i < arr.length; i += 1) {
-        score += this.sumSameNumbers(arr[i], arr[i].length);
-        arr[i].forEach(function (element, index) {
             grid[index].push(element);
         });
-    }
+    });
 
     grid.forEach(function (row) {
         row.splice(0, arr.length);
     });
 
+    this.addNewElementToGrid(shifts, score);
+    this.checkForEmptyCells(grid, arr, emptyCells);
+
     return score;
 }
 
-MatrixModel.prototype.sumSameNumbers = function (subArr, subArrSize) {
+MatrixModel.prototype.moveDown = function (grid, arr, shifts, emptyCells, score, direction) {
+    var i, j;
+
+    this.groupCellsByIndex(grid, arr);
+
+    for (i = 0; i < arr.length; i += 1) {
+        for (j = 0; j < arr[i].length; j += 1) {
+            if (arr[i][j] !== '' && arr[i][j + 1] === '') {
+                shifts += 1;
+            }
+            if (arr[i][j] === '') {
+                arr[i].unshift(arr[i].splice(j, 1).shift());
+            }
+        }
+        score += this.sumSameNumbers(arr[i], arr[i].length, direction);
+    }
+
+    arr.forEach(function (subArr) {
+        subArr.forEach(function (element, index) {
+            grid[index].push(element);
+        });
+    });
+
+    grid.forEach(function (row) {
+        row.splice(0, arr.length);
+    });
+
+    this.addNewElementToGrid(shifts, score);
+    this.checkForEmptyCells(grid, arr, emptyCells);
+
+    return score;
+}
+
+MatrixModel.prototype.groupCellsByIndex = function (grid, arr) {
+    if (arr.length) {
+        arr.splice(0);
+    }
+
+    grid.forEach(function (row) {
+        row.forEach(function (cell, index) {
+            if (!arr[index]) {
+                arr.push([]);
+            }
+            arr[index].push(cell);
+        });
+    });
+}
+
+MatrixModel.prototype.sumSameNumbers = function (subArr, subArrSize, direction) {
     var i, sum = 0;
 
-    for (i = 0; i < subArrSize; i += 1) {
-        if (subArr[i] !== '' && subArr[i + 1] !== '' && subArr[i] === subArr[i + 1]) {
-            subArr[i] += subArr[i + 1];
-            sum += parseInt(subArr[i]);
-            subArr.splice(i + 1, 1);
-            subArr.unshift('');
+    if (direction === 'right' || direction === 'down') {
+        for (i = subArrSize - 1; i >= 0; i -= 1) {
+            if (subArr[i] !== '' && subArr[i - 1] !== '' && subArr[i] === subArr[i - 1]) {
+                subArr[i] += subArr[i - 1];
+                sum += parseInt(subArr[i]);
+                subArr.splice(i - 1, 1);
+                subArr.unshift('');
+            }
+        }
+    } else if (direction === 'left' || direction === 'up') {
+        for (i = 0; i < subArrSize; i += 1) {
+            if (subArr[i] !== '' && subArr[i + 1] !== '' && subArr[i] === subArr[i + 1]) {
+                subArr[i] += subArr[i + 1];
+                sum += parseInt(subArr[i]);
+                subArr.splice(i + 1, 1);
+                subArr.push('');
+            }
+
         }
     }
 
     return sum;
 }
 
+MatrixModel.prototype.addNewElementToGrid = function (shifts, score) {
+    if (shifts > 0 || score > 0) {
+        this.getRandomCellWithoutDuplicates();
+    }
+}
+
+MatrixModel.prototype.checkForEmptyCells = function (grid, arr, emptyCells) {
+    var i;
+
+    grid.forEach(function (row) {
+        if (row.includes('')) {
+            emptyCells += 1;
+        }
+        for (i = 0; i < row.length; i += 1) {
+            if (row[i] !== '' && row[i + 1] !== '' && row[i] === row[i + 1]) {
+                emptyCells += 1;
+            }
+        }
+    });
+
+    this.groupCellsByIndex(grid, arr);
+
+    arr.forEach(function (subArr) {
+        for (i = 0; i < subArr.length; i += 1) {
+            if (subArr[i] !== '' && subArr[i + 1] !== '' && subArr[i] === subArr[i + 1]) {
+                emptyCells += 1;
+            }
+        }
+    });
+
+    if (emptyCells === 0) {
+        this.showDefeat();
+    }
+}
+
 MatrixModel.prototype.displayActions = function (key) {
-    var arr = [], grid = this.attributes.grid, gridSize = grid.length, i, score = 0;
+    var grid = this.attributes.grid,
+        gridSize = grid.length,
+        arr = [],
+        shifts = 0,
+        emptyCells = 0,
+        score = 0;
 
     switch (key) {
         case 'right':
-            score += this.moveRight(grid, gridSize, i, score);
+            score += this.moveRight(grid, gridSize, arr, shifts, emptyCells, score, key);
             break;
         case 'left':
-            score += this.moveLeft(grid, gridSize, i, score);
+            score += this.moveLeft(grid, gridSize, arr, shifts, emptyCells, score, key);
             break;
         case 'up':
-            score += this.moveUp(arr, grid, i, score);
+            score += this.moveUp(grid, arr, shifts, emptyCells, score, key);
             break;
         case 'down':
-            score += this.moveDown(arr, grid, i, score);
+            score += this.moveDown(grid, arr, shifts, emptyCells, score, key);
             break;
+        default:
+            return false;
     }
 
-    this.getRandomCellWithoutDuplicates();
     localStorage.setItem('grid', JSON.stringify(grid));
     this.publish('changeData');
 
@@ -237,4 +323,8 @@ MatrixModel.prototype.showWin = function () {
 
     localStorage.setItem('grid', JSON.stringify(grid));
     this.publish('changeData');
+}
+
+MatrixModel.prototype.showDefeat = function () {
+    alert("Oops, you lost! Try again!");
 }
