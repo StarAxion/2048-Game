@@ -24,7 +24,6 @@ Controller.prototype.onKeyPress = function (event) {
     }
 
     if (scoreResult >= 2048) {
-        alert("Winner, winner, chicken dinner!");
         this.matrixModel.showWin();
     } else {
         this.summaryModel.setTotalScore(this.matrixModel.displayActions(key));

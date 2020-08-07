@@ -287,20 +287,21 @@ MatrixModel.prototype.displayActions = function (key) {
         arr = [],
         shifts = 0,
         emptyCells = 0,
-        score = 0;
+        score = 0,
+        totalScore = 0;
 
     switch (key) {
         case 'right':
-            score += this.moveRight(grid, gridSize, arr, shifts, emptyCells, score, key);
+            totalScore += this.moveRight(grid, gridSize, arr, shifts, emptyCells, score, key);
             break;
         case 'left':
-            score += this.moveLeft(grid, gridSize, arr, shifts, emptyCells, score, key);
+            totalScore += this.moveLeft(grid, gridSize, arr, shifts, emptyCells, score, key);
             break;
         case 'up':
-            score += this.moveUp(grid, arr, shifts, emptyCells, score, key);
+            totalScore += this.moveUp(grid, arr, shifts, emptyCells, score, key);
             break;
         case 'down':
-            score += this.moveDown(grid, arr, shifts, emptyCells, score, key);
+            totalScore += this.moveDown(grid, arr, shifts, emptyCells, score, key);
             break;
         default:
             return false;
@@ -309,10 +310,12 @@ MatrixModel.prototype.displayActions = function (key) {
     localStorage.setItem('grid', JSON.stringify(grid));
     this.publish('changeData');
 
-    return score;
+    return totalScore;
 }
 
 MatrixModel.prototype.showWin = function () {
+    alert("Winner, winner, chicken dinner!");
+
     var grid = this.attributes.grid;
 
     grid.forEach(function (row) {
