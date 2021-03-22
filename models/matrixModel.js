@@ -27,12 +27,12 @@ function MatrixModel() {
 MatrixModel.prototype = Object.create(BaseModel.prototype);
 MatrixModel.prototype.constructor = MatrixModel;
 
-MatrixModel.prototype.getRandomValue = function () {
+MatrixModel.prototype.getPrimalNumber = function () {
     return Math.random() < 0.6 ? 2 : 4;
 }
 
 MatrixModel.prototype.getRandomCell = function () {
-    return Math.floor(Math.random() * 4);
+    return Math.floor(Math.random() * this.attributes.size.width);
 }
 
 MatrixModel.prototype.getRandomRow = function () {
@@ -48,7 +48,7 @@ MatrixModel.prototype.getRandomRow = function () {
         return 0;
     }
 
-    var randomRow = Math.floor(Math.random() * 4);
+    var randomRow = Math.floor(Math.random() * this.attributes.size.height);
 
     if (this.attributes.grid[randomRow].includes('')) {
         return randomRow;
@@ -57,26 +57,29 @@ MatrixModel.prototype.getRandomRow = function () {
     }
 }
 
-MatrixModel.prototype.getRandomCellExist = function (row) {
-    var i, newArr = [], randomRow = this.attributes.grid[row], size = randomRow.length;
+MatrixModel.prototype.getEmptyCell = function (row) {
+    var i,
+        emptyCells = [],
+        randomRow = this.attributes.grid[row],
+        rowSize = randomRow.length;
 
-    for (i = 0; i < size; i += 1) {
+    for (i = 0; i < rowSize; i += 1) {
         if (randomRow[i] === '') {
-            newArr.push(i);
+            emptyCells.push(i);
         }
     }
 
-    return newArr[Math.floor(Math.random() * newArr.length)];
+    return emptyCells[Math.floor(Math.random() * emptyCells.length)];
 }
 
-MatrixModel.prototype.getRandomCellWithoutDuplicates = function () {
+MatrixModel.prototype.getNewNumber = function () {
     var randomRow = this.getRandomRow();
-    this.attributes.grid[randomRow][this.getRandomCellExist(randomRow)] = this.getRandomValue();
+    this.attributes.grid[randomRow][this.getEmptyCell(randomRow)] = this.getPrimalNumber();
 }
 
 MatrixModel.prototype.initialRender = function () {
-    this.attributes.grid[this.getRandomRow()][this.getRandomCell()] = this.getRandomValue();
-    this.getRandomCellWithoutDuplicates();
+    this.attributes.grid[this.getRandomRow()][this.getRandomCell()] = this.getPrimalNumber();
+    this.getNewNumber();
 
     this.publish('changeData');
 }
@@ -248,7 +251,7 @@ MatrixModel.prototype.sumSameNumbers = function (subArr, subArrSize, direction) 
 
 MatrixModel.prototype.addNewElementToGrid = function (shifts, score) {
     if (shifts > 0 || score > 0) {
-        this.getRandomCellWithoutDuplicates();
+        this.getNewNumber();
     }
 }
 
@@ -277,7 +280,9 @@ MatrixModel.prototype.checkForEmptyCells = function (grid, arr, emptyCells) {
     });
 
     if (emptyCells === 0) {
-        this.showDefeat();
+        setTimeout(() => {
+            this.showDefeat();
+        }, 200);
     }
 }
 

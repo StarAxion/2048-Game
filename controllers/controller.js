@@ -6,17 +6,17 @@ function Controller() {
 Controller.prototype.onKeyPress = function (event) {
     var key, scoreResult = Number(document.getElementById('scoreResult').innerText);
 
-    switch (event.keyCode) {
-        case 39:
+    switch (event.key) {
+        case 'ArrowRight':
             key = 'right';
             break;
-        case 37:
+        case 'ArrowLeft':
             key = 'left';
             break;
-        case 38:
+        case 'ArrowUp':
             key = 'up';
             break;
-        case 40:
+        case 'ArrowDown':
             key = 'down';
             break;
         default:
@@ -24,7 +24,9 @@ Controller.prototype.onKeyPress = function (event) {
     }
 
     if (scoreResult >= 2048) {
-        this.matrixModel.showWin();
+        setTimeout(() => {
+            this.matrixModel.showWin();
+        }, 200);
     } else {
         this.summaryModel.setTotalScore(this.matrixModel.displayActions(key));
         this.summaryModel.setBestScore();

@@ -11,16 +11,16 @@
 }
 
 #title {
-    font-size: 5rem;
     margin: 22px 0 22px 0;
+    font-size: 5rem; 
 }
 
 .score, .best {
     position: relative;
-    text-align: center;
-    background: lightgray;
-    color: white;
     padding: 8px 32px;
+    text-align: center;
+    color: white;
+    background: lightgray;
     border-radius: 8%;
 }
 
@@ -43,7 +43,20 @@
     top: -25px;
     left: 46px;
     color: #655e5e;
-    animation: move-up 600ms ease-in;
+    -webkit-animation: move-up 600ms ease-in;
+            animation: move-up 600ms ease-in;
+}
+
+@-webkit-keyframes move-up {
+    0% {
+        top: 25px;
+        opacity: 1;
+    }
+
+    100% {
+        top: -50px;
+        opacity: 0;
+    }
 }
 
 @keyframes move-up {

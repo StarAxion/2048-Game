@@ -14,16 +14,14 @@
     width: 120px;
     height: 115px;
     vertical-align: middle;
-    border: 12px solid #bbada0;
     text-align: center;
-    color: #776e65;
     font-size: 4em;
     font-weight: 600;
+    color: #776e65;
+    border: 12px solid #bbada0;
 }
 .appear-2 {
-    transition: opacity 2s ease-in;
     background: #f9f7f3;
-    /*animation: appear 200ms ease 100ms;*/
 }
 
 .appear-4 {
@@ -51,66 +49,71 @@
 }
 
 .appear-128 {
-    color: #f9f6f2;
-    background: #edcf72;
     font-size: 60px;
+    color: #f9f6f2;
+    background: #edcf72; 
 }
 
 .appear-256 {
-    color: #f9f6f2;
-    background: #edcc61;
     font-size: 60px;
+    color: #f9f6f2;
+    background: #edcc61; 
 }
 
 .appear-512 {
+    font-size: 60px;
     color: #f9f6f2;
     background: #f65e3b;
-    font-size: 60px;
 }
 
 .appear-1024 {
-    color: #f9f6f2;
-    background: #f2b179;
     font-size: 60px;
+    color: #f9f6f2;
+    background: #f2b179; 
 }
 
 .appear-2048 {
+    font-size: 60px;
     color: #f9f6f2;
     background: #f27e79;
-    font-size: 60px;
+    opacity: 0;
+    transform: scale(0);
+    -webkit-animation: pop .2s ease;
+            animation: pop .2s ease;
+    -webkit-animation-fill-mode: forwards;
+            animation-fill-mode: forwards;
 }
 
-.addCell {
-    animation: pop 200ms ease 100ms;
-}
-
-@keyframes appear {
+@-webkit-keyframes pop {
     0% {
         opacity: 0;
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
+        transform: scale(0);
+    }
+
+    50% {
+        opacity: .5;
+        transform: scale(1.2);
     }
 
     100% {
         opacity: 1;
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
+        transform: scale(1);
     }
 }
 
 @keyframes pop {
     0% {
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
+        opacity: 0;
+        transform: scale(0);
     }
 
     50% {
-        -webkit-transform: scale(1.2);
-        -moz-transform: scale(1.2);
+        opacity: .5;
+        transform: scale(1.2);
     }
 
     100% {
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
+        opacity: 1;
+        transform: scale(1);
     }
 }

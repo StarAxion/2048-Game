@@ -6,5 +6,5 @@ BaseModel.prototype = new PubSub();
 BaseModel.prototype.constructor = BaseModel;
 
 BaseModel.prototype.clear = function () {
-    throw new Error('Should override clear method!');
+    throw new Error('Override clear method!');
 }
