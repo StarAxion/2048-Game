@@ -4,7 +4,7 @@ function Controller() {
 }
 
 Controller.prototype.onKeyPress = function (event) {
-    var key, scoreResult = Number(document.getElementById('scoreResult').innerText);
+    var key, totalScore = Number(document.getElementById('totalScore').innerText);
 
     switch (event.key) {
         case 'ArrowRight':
@@ -23,7 +23,7 @@ Controller.prototype.onKeyPress = function (event) {
             return false;
     }
 
-    if (scoreResult >= 2048) {
+    if (totalScore >= 2048) {
         setTimeout(() => {
             this.matrixModel.showWin();
         }, 200);

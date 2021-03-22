@@ -7,7 +7,7 @@ body {
     background: #faf8ef;
 }
 
-#buttonBlock {
+.buttonBlock {
     margin: 30px auto 0 auto;
     text-align: center;
 }

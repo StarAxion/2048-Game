@@ -4,15 +4,15 @@
     align-items: center;
 }
 
+#title {
+    margin: 22px 0 22px 0;
+    font-size: 5rem; 
+}
+
 .results {
     display: flex;
     flex-direction: row;
     margin-left: 6%;
-}
-
-#title {
-    margin: 22px 0 22px 0;
-    font-size: 5rem; 
 }
 
 .score, .best {
@@ -36,37 +36,4 @@
 
 .best {
     margin-left: 12%;
-}
-
-.scoreAddition {
-    position: absolute;
-    top: -25px;
-    left: 46px;
-    color: #655e5e;
-    -webkit-animation: move-up 600ms ease-in;
-            animation: move-up 600ms ease-in;
-}
-
-@-webkit-keyframes move-up {
-    0% {
-        top: 25px;
-        opacity: 1;
-    }
-
-    100% {
-        top: -50px;
-        opacity: 0;
-    }
-}
-
-@keyframes move-up {
-    0% {
-        top: 25px;
-        opacity: 1;
-    }
-
-    100% {
-        top: -50px;
-        opacity: 0;
-    }
 }
