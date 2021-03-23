@@ -1,11 +1,11 @@
 function AppView() {
-    var matrixView = new MatrixView();
     var summaryView = new SummaryView();
+    var matrixView = new MatrixView();
 
     this.render = function (selector) {
         var element = document.getElementById(selector);
-        matrixView.show(element);
         summaryView.show(element);
+        matrixView.show(element);
     }
 }
 
