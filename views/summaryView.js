@@ -5,7 +5,6 @@ function SummaryView() {
     BaseView.call(this);
 }
 
-// inheritance SummaryView from BaseView
 SummaryView.prototype = Object.create(BaseView.prototype);
 SummaryView.prototype.constructor = SummaryView;
 

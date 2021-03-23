@@ -6,7 +6,6 @@ function MatrixView() {
     BaseView.call(this);
 }
 
-// inheritance MatrixView from BaseView
 MatrixView.prototype = Object.create(BaseView.prototype);
 MatrixView.prototype.constructor = MatrixView;
 
