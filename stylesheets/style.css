@@ -2,9 +2,16 @@
 @import "matrix.css";
 
 body {
-    position: static;
+    height: 100vh;
     font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
     background: #faf8ef;
+    overflow: hidden;
+}
+
+#root {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .buttonBlock {
